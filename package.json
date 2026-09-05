@@ -11,10 +11,10 @@
   "license": "ISC",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/annsswerty/my-node-app.git"
+    "url": "git+https://github.com/EgorBorisuk/my-node-app.git"
   },
   "bugs": {
-    "url": "https://github.com/annsswerty/my-node-app/issues"
+    "url": "https://github.com/EgorBorisuk/my-node-app/issues"
   },
-  "homepage": "https://github.com/annsswerty/my-node-app#readme"
+  "homepage": "https://github.com/EgorBorisuk/my-node-app#readme"
 }
