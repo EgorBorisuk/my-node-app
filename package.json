@@ -8,5 +8,13 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/annsswerty/my-node-app.git"
+  },
+  "bugs": {
+    "url": "https://github.com/annsswerty/my-node-app/issues"
+  },
+  "homepage": "https://github.com/annsswerty/my-node-app#readme"
 }
