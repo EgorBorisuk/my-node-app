@@ -1,31 +1,37 @@
 const http = require('http');
 
-const STUDENT_NAME = 'Sedura Anna Aleksandrovna';
-const STUDENT_GROUP = '477';
-const JOURNAL_NUMBER = 20;
-
-function calculatePi(digits) {
-  let pi = 3.0;
-  let sign = 1;
-  for (let i = 2; i < 400000; i += 2) {
-    pi += sign * (4 / (i * (i + 1) * (i + 2)));
-    sign = -sign;
+function calculatePi(iterations = 1000000) {
+  let inside = 0;
+  for (let i = 0; i < iterations; i++) {
+    const x = Math.random();
+    const y = Math.random();
+    if (x * x + y * y <= 1) {
+      inside++;
+    }
   }
-  return pi.toFixed(digits);
+  return (inside / iterations) * 4;
 }
 
-const piValue = calculatePi(JOURNAL_NUMBER);
+
+const fullName = "Борисюк Егор Александрович";        
+const group = "401";                          
+const journalNumber = 1;                        
+
+
+const pi = calculatePi(1000000);
+const piRounded = pi.toFixed(journalNumber);
 
 const server = http.createServer((req, res) => {
   res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
-  res.end(\
-    <p>\</p>
-    <p>\</p>
-    <p>         (      : \): \</p>
-  \);
+  res.end(`
+    <h1>Информация о студенте</h1>
+    <p><strong>ФИО:</strong> ${fullName}</p>
+    <p><strong>Группа:</strong> ${group}</p>
+    <p><strong>Число Пи (до ${journalNumber} знака):</strong> ${piRounded}</p>
+  `);
 });
 
 const PORT = 3000;
 server.listen(PORT, () => {
-  console.log(\                  http://localhost:\\);
+  console.log(`Сервер запущен на http://localhost:${PORT}`);
 });
