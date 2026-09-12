@@ -1,0 +1,6 @@
+[2026-09-12T09:23:17.533Z] server:started: {"port":3000}
+[2026-09-12T09:23:27.545Z] server:stopped: {}
+[2026-09-12T09:25:18.798Z] server:started: {"port":3000}
+[2026-09-12T09:25:21.986Z] request:received: {"method":"GET","url":"/"}
+[2026-09-12T09:25:22.046Z] request:received: {"method":"GET","url":"/favicon.ico"}
+[2026-09-12T09:26:28.873Z] server:stopped: {}
