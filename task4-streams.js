@@ -1,36 +1,17 @@
 // task4-streams.js
-<<<<<<< HEAD
-// Task 4: generate large file and process it with streams
-=======
 // Task 4: generate big file + stream processing
 // Variant 1 -> range 1-5 -> also count even/odd numbers
->>>>>>> dd194fb2bcafc72c94a4455d3ebef9d3130ca8a5
 
 const fs = require('fs');
 const fsp = require('fs').promises;
 const path = require('path');
 const readline = require('readline');
 
-<<<<<<< HEAD
-const VARIANT = 5; // ← CHANGE to your variant number
-
-const dataFile = path.join(__dirname, `data_${VARIANT}.txt`);
-const processedFile = path.join(__dirname, `processed_${VARIANT}.txt`);
-const filteredFile = path.join(__dirname, `filtered_${VARIANT}.txt`); // variants 11-15
-
-const TOTAL_LINES = 100000;
-
-// 1) Generate file via stream (if not exists)
-=======
 const VARIANT = 1;
-
 const dataFile = path.join(__dirname, `data_${VARIANT}.txt`);
 const processedFile = path.join(__dirname, `processed_${VARIANT}.txt`);
-
 const TOTAL_LINES = 100000;
 
-// 1) Generate file
->>>>>>> dd194fb2bcafc72c94a4455d3ebef9d3130ca8a5
 async function generateFile() {
   try {
     await fsp.access(dataFile);
@@ -50,11 +31,6 @@ async function generateFile() {
   }
 }
 
-<<<<<<< HEAD
-// 2) Process file with streams
-=======
-// 2) Process with streams
->>>>>>> dd194fb2bcafc72c94a4455d3ebef9d3130ca8a5
 async function processFile() {
   const stat = await fsp.stat(dataFile);
   const sizeMB = (stat.size / 1024 / 1024).toFixed(2);
@@ -69,16 +45,7 @@ async function processFile() {
   let max = -Infinity;
   let even = 0;
   let odd = 0;
-<<<<<<< HEAD
-  const freq = new Map();   // for variants 6-10
-  const numbers = [];       // for median (variants 16-20)
-  const filterStream = fs.createWriteStream(filteredFile, { encoding: 'utf8' }); // 11-15
 
-  // Stream read with 64 KB buffer (highWaterMark)
-=======
-
-  // Stream read with 64 KB buffer
->>>>>>> dd194fb2bcafc72c94a4455d3ebef9d3130ca8a5
   const rl = readline.createInterface({
     input: fs.createReadStream(dataFile, { encoding: 'utf8', highWaterMark: 64 * 1024 }),
     crlfDelay: Infinity,
@@ -86,10 +53,6 @@ async function processFile() {
 
   let lastPct = 0;
   for await (const line of rl) {
-<<<<<<< HEAD
-    // Line format: "1, 847, Variant 5"
-=======
->>>>>>> dd194fb2bcafc72c94a4455d3ebef9d3130ca8a5
     const parts = line.split(',').map((s) => s.trim());
     const num = parseInt(parts[1], 10);
     if (isNaN(num)) continue;
@@ -100,31 +63,15 @@ async function processFile() {
     if (num > max) max = num;
     if (num % 2 === 0) even++; else odd++;
 
-<<<<<<< HEAD
-    freq.set(num, (freq.get(num) || 0) + 1);
-    numbers.push(num);
-    if (num > 500) filterStream.write(line + '\n'); // 11-15
-
-    // Progress every 10%
-=======
->>>>>>> dd194fb2bcafc72c94a4455d3ebef9d3130ca8a5
     const pct = Math.floor((count / TOTAL_LINES) * 100);
     if (pct >= lastPct + 10) {
       lastPct = Math.floor(pct / 10) * 10;
       console.log(`Progress: ${lastPct}% (${count.toLocaleString()} lines processed)`);
     }
   }
-<<<<<<< HEAD
-  filterStream.end();
 
   const avg = sum / count;
 
-  // Build report
-=======
-
-  const avg = sum / count;
-
->>>>>>> dd194fb2bcafc72c94a4455d3ebef9d3130ca8a5
   let report =
     `Total lines: ${count.toLocaleString()}\n` +
     `Sum of numbers: ${sum.toLocaleString()}\n` +
@@ -134,34 +81,12 @@ async function processFile() {
     `Even numbers: ${even.toLocaleString()}\n` +
     `Odd numbers: ${odd.toLocaleString()}\n`;
 
-<<<<<<< HEAD
-  // Extra conditions by variant
-  if (VARIANT >= 6 && VARIANT <= 10) {
-    const top10 = [...freq.entries()].sort((a, b) => b[1] - a[1]).slice(0, 10);
-    report += `\nTop-10 most frequent numbers:\n` + top10.map(([n, c]) => `  ${n}: ${c} times`).join('\n') + '\n';
-  }
-  if (VARIANT >= 16 && VARIANT <= 20) {
-    numbers.sort((a, b) => a - b);
-    const mid = Math.floor(numbers.length / 2);
-    const median =
-      numbers.length % 2 === 0 ? (numbers[mid - 1] + numbers[mid]) / 2 : numbers[mid];
-    report += `\nMedian: ${median}\n`;
-  }
-
-=======
->>>>>>> dd194fb2bcafc72c94a4455d3ebef9d3130ca8a5
   await fsp.writeFile(processedFile, report, 'utf8');
 
   console.log('Processing complete!');
   console.log('\nResults:');
   console.log(report);
   console.log(`Results saved to: processed_${VARIANT}.txt`);
-<<<<<<< HEAD
-  if (VARIANT >= 11 && VARIANT <= 15) {
-    console.log(`Lines with numbers > 500 saved to: filtered_${VARIANT}.txt`);
-  }
-=======
->>>>>>> dd194fb2bcafc72c94a4455d3ebef9d3130ca8a5
   console.log(`Execution time: ${((Date.now() - start) / 1000).toFixed(2)} sec`);
 }
 
