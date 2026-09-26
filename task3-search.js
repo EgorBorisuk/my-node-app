@@ -1,14 +1,9 @@
-// task3-search.js
-// Task 3: recursive directory scan + report_1.json
-// Variant 1 -> range 1-5 -> skip files larger than 10 MB
-
 const fs = require('fs').promises;
 const path = require('path');
 
 const VARIANT = 1;
-const MAX_SIZE = 10 * 1024 * 1024; // 10 MB — variants 1-5
+const MAX_SIZE = 10 * 1024 * 1024;
 const targetDir = process.argv[2] ? path.resolve(process.argv[2]) : __dirname;
-// For variants 6-10 this would skip node_modules/.git
 const IGNORE_DIRS = new Set(['node_modules', '.git']);
 
 const stats = {
@@ -28,7 +23,6 @@ function formatSize(bytes) {
 async function scan(dir) {
   const entries = await fs.readdir(dir, { withFileTypes: true });
   for (const e of entries) {
-    // For variants 1-5 we only ignore node_modules/.git inside them
     if (e.isDirectory() && IGNORE_DIRS.has(e.name)) continue;
     const full = path.join(dir, e.name);
     if (e.isDirectory()) {
@@ -36,7 +30,6 @@ async function scan(dir) {
       await scan(full);
     } else {
       const stat = await fs.stat(full);
-      // Variant 1-5: skip files > 10 MB
       if (stat.size > MAX_SIZE) continue;
       stats.files++;
       stats.totalSize += stat.size;

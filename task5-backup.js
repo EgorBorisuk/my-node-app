@@ -1,7 +1,3 @@
-// task5-backup.js
-// Task 5: backup via streams + sync
-// Variant 1 -> range 1-5 -> compress text files (remove extra spaces)
-
 const fs = require('fs');
 const fsp = require('fs').promises;
 const path = require('path');
@@ -10,10 +6,9 @@ const VARIANT = 1;
 const sourceDir = path.join(__dirname, `source_${VARIANT}`);
 const backupDir = path.join(__dirname, `backup_${VARIANT}`);
 const EXT_STREAM = new Set(['.txt', '.js', '.json']);
-const TEXT_EXT = new Set(['.txt', '.js', '.json', '.md', '.css']); // for compression (variant 1-5)
+const TEXT_EXT = new Set(['.txt', '.js', '.json', '.md', '.css']);
 const CHUNK_SIZE = 512 * 1024;
 
-// ---- 1) Create test structure ----
 async function createSource() {
   await fsp.rm(sourceDir, { recursive: true, force: true });
   await fsp.mkdir(sourceDir, { recursive: true });
@@ -24,7 +19,6 @@ async function createSource() {
     const ext = extensions[i % extensions.length];
     const name = `file_${i}${ext}`;
     const size = Math.floor(Math.random() * 500) * 1024;
-    // Add spaces so compression has something to remove
     const content = Buffer.alloc(size, `  data ${i}   with   spaces  `);
     await fsp.writeFile(path.join(sourceDir, name), content);
     manifest.push({ name, size });
@@ -40,7 +34,6 @@ async function createSource() {
     }
   }
 
-  // Big file > 1 MB
   await fsp.writeFile(path.join(sourceDir, 'big.txt'), Buffer.alloc(2 * 1024 * 1024, 'x'));
   manifest.push({ name: 'big.txt', size: 2 * 1024 * 1024 });
 
@@ -52,7 +45,6 @@ async function createSource() {
   console.log(`Created source_${VARIANT} (${manifest.length} files)`);
 }
 
-// ---- 2) Copy functions ----
 function streamCopy(src, dest) {
   return new Promise((resolve, reject) => {
     fs.createReadStream(src, { highWaterMark: 64 * 1024 })
@@ -62,7 +54,6 @@ function streamCopy(src, dest) {
   });
 }
 
-// Copy with compression (remove extra spaces) — variant 1-5
 function streamCopyCompressed(src, dest) {
   return new Promise((resolve, reject) => {
     const rl = require('readline').createInterface({
@@ -70,7 +61,6 @@ function streamCopyCompressed(src, dest) {
     });
     const out = fs.createWriteStream(dest, { encoding: 'utf8' });
     rl.on('line', (line) => {
-      // collapse multiple spaces into one and trim edges
       out.write(line.replace(/\s+/g, ' ').trim() + '\n');
     });
     rl.on('close', () => out.end());
@@ -80,7 +70,6 @@ function streamCopyCompressed(src, dest) {
   });
 }
 
-// Copy in chunks of 512 KB
 async function chunkedCopy(src, dest) {
   const fd = await fsp.open(src, 'r');
   const out = fs.createWriteStream(dest);
@@ -111,10 +100,9 @@ async function copyDir(src, dest, stats) {
       const stat = await fsp.stat(s);
       const ext = path.extname(e.name).toLowerCase();
       if (stat.size > 1024 * 1024) {
-        await chunkedCopy(s, d); // chunks
+        await chunkedCopy(s, d);
         stats.chunked++;
       } else if (EXT_STREAM.has(ext)) {
-        // Variant 1-5: compress text-ish files while streaming
         if (TEXT_EXT.has(ext)) {
           await streamCopyCompressed(s, d);
           stats.compressed++;
@@ -133,7 +121,6 @@ async function copyDir(src, dest, stats) {
   }
 }
 
-// ---- 3) Sync ----
 async function listFiles(dir, base = dir, out = {}) {
   const entries = await fsp.readdir(dir, { withFileTypes: true });
   for (const e of entries) {
@@ -154,7 +141,6 @@ async function compareDirs() {
   const same = [], changed = [], added = [], removed = [];
   for (const [rel, s] of Object.entries(a)) {
     if (!b[rel]) removed.push(rel);
-    // размер может отличаться из-за сжатия текста — учитываем это
     else if (b[rel].size !== s.size) changed.push(rel);
     else same.push(rel);
   }
