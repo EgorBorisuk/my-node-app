@@ -1,3 +1,7 @@
+// task2-directories.js
+// Task 2: create directory structure, move, rename, delete
+// Variant 1 -> ODD -> create 3 nested folders in src/components
+
 const fs = require('fs').promises;
 const path = require('path');
 

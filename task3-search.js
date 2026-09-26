@@ -1,3 +1,7 @@
+// task3-search.js
+// Task 3: recursive directory scan + report_1.json
+// Variant 1 -> range 1-5 -> skip files larger than 10 MB
+
 const fs = require('fs').promises;
 const path = require('path');
 
@@ -49,21 +53,25 @@ async function scan(dir) {
 async function main() {
   try {
     await scan(targetDir);
+
     console.log(`Analyzing directory: ${targetDir}`);
     console.log(`Total folders: ${stats.dirs}`);
     console.log(`Total files: ${stats.files}`);
     console.log(
       `Total size: ${formatSize(stats.totalSize)} (${stats.totalSize.toLocaleString()} bytes)`
     );
+
     console.log('\nFile extensions:');
     for (const [ext, v] of Object.entries(stats.byExt).sort((a, b) => b[1].size - a[1].size)) {
       console.log(`  ${ext}: ${v.count} file(s) (${formatSize(v.size)})`);
     }
+
     const sorted = [...stats.allFiles].sort((a, b) => b.size - a.size);
     console.log('\nTop-5 largest files:');
     sorted.slice(0, 5).forEach((f, i) =>
       console.log(`  ${i + 1}. ${f.name} (${formatSize(f.size)}) - ./${f.path}`)
     );
+
     console.log('\nTop-5 smallest files:');
     [...sorted].reverse().slice(0, 5).forEach((f, i) =>
       console.log(`  ${i + 1}. ${f.name} (${formatSize(f.size)}) - ./${f.path}`)

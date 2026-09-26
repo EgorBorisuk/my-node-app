@@ -1,7 +1,12 @@
+// task1-create-read.js
+// Task 1: create, write, append and read student_1.txt
+// Variant: 1 (Borisuk Egor)
+
 const fs = require('fs').promises;
 const path = require('path');
 
 const VARIANT = 1;
+
 const fileName = `student_${VARIANT}.txt`;
 const filePath = path.join(__dirname, fileName);
 

@@ -1,3 +1,7 @@
+// task5-backup.js
+// Task 5: backup via streams + sync
+// Variant 1 -> range 1-5 -> compress text files (remove extra spaces)
+
 const fs = require('fs');
 const fsp = require('fs').promises;
 const path = require('path');
@@ -5,6 +9,7 @@ const path = require('path');
 const VARIANT = 1;
 const sourceDir = path.join(__dirname, `source_${VARIANT}`);
 const backupDir = path.join(__dirname, `backup_${VARIANT}`);
+
 const EXT_STREAM = new Set(['.txt', '.js', '.json']);
 const TEXT_EXT = new Set(['.txt', '.js', '.json', '.md', '.css']);
 const CHUNK_SIZE = 512 * 1024;
@@ -12,6 +17,7 @@ const CHUNK_SIZE = 512 * 1024;
 async function createSource() {
   await fsp.rm(sourceDir, { recursive: true, force: true });
   await fsp.mkdir(sourceDir, { recursive: true });
+
   const extensions = ['.txt', '.js', '.json', '.jpg', '.png', '.gif', '.md', '.css'];
   const manifest = [];
 
@@ -139,6 +145,7 @@ async function compareDirs() {
   const a = await listFiles(sourceDir);
   const b = await listFiles(backupDir);
   const same = [], changed = [], added = [], removed = [];
+
   for (const [rel, s] of Object.entries(a)) {
     if (!b[rel]) removed.push(rel);
     else if (b[rel].size !== s.size) changed.push(rel);
@@ -147,12 +154,14 @@ async function compareDirs() {
   for (const rel of Object.keys(b)) {
     if (!a[rel]) added.push(rel);
   }
+
   const report =
     `Directory comparison:\n` +
     `  Same: ${same.length} files\n` +
     `  Changed (size diff, e.g. compressed): ${changed.length} files\n` +
     `  Added: ${added.length} files\n` +
     `  Removed: ${removed.length} files\n`;
+
   console.log(report);
   const reportPath = path.join(__dirname, `sync_report_${VARIANT}.txt`);
   await fsp.writeFile(reportPath, report, 'utf8');
@@ -163,10 +172,13 @@ async function main() {
   try {
     const start = Date.now();
     await createSource();
+
     await fsp.rm(backupDir, { recursive: true, force: true });
     await fsp.mkdir(backupDir, { recursive: true });
+
     const stats = { total: 0, stream: 0, normal: 0, chunked: 0, compressed: 0, bytes: 0 };
     await copyDir(sourceDir, backupDir, stats);
+
     console.log('\nCopy complete!');
     console.log(`  Files copied: ${stats.total}`);
     console.log(`  Stream copy: ${stats.stream}`);
@@ -175,6 +187,7 @@ async function main() {
     console.log(`  Chunked (>1 MB): ${stats.chunked}`);
     console.log(`  Total size: ${(stats.bytes / 1024 / 1024).toFixed(2)} MB`);
     console.log(`  Time: ${((Date.now() - start) / 1000).toFixed(2)} sec`);
+
     await compareDirs();
   } catch (err) {
     console.error('Error:', err.message);
