@@ -1,34 +1,44 @@
+
 {
   "name": "my-node-app",
   "version": "1.0.0",
-  "description": "",
+  "description": "CLI-приложение для управления проектами",
   "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "bin": {
+    "mycli": "./bin/cli.js"
   },
-  "keywords": [],
-  "author": "",
+  "scripts": {
+    "test": "node --test tests/*.test.js",
+    "start": "node bin/cli.js"
+  },
+  "keywords": [
+    "cli",
+    "node",
+    "commander"
+  ],
+  "author": "Егор Борисюк Александрович",
   "license": "ISC",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/EgorBorisuk/my-node-app.git"
   },
-  "bugs": {
-    "url": "https://github.com/EgorBorisuk/my-node-app/issues"
-  },
-  "homepage": "https://github.com/EgorBorisuk/my-node-app#readme",
   "dependencies": {
     "@koa/router": "^15.7.1",
     "bcryptjs": "^3.0.3",
+    "chalk": "^4.1.2",
+    "cli-progress": "^3.12.0",
+    "commander": "^15.1.0",
     "compression": "^1.8.2",
     "dotenv": "^18.0.10",
     "express": "^5.2.1",
     "express-rate-limit": "^8.7.0",
+    "inquirer": "^8.2.6",
     "joi": "^18.2.9",
     "jsonwebtoken": "^9.0.3",
     "koa": "^3.3.0",
     "koa-bodyparser": "^4.4.1",
     "mysql2": "^3.24.6",
+    "ora": "^5.4.1",
     "swagger-jsdoc": "^6.3.0",
     "swagger-ui-express": "^5.0.1"
   }

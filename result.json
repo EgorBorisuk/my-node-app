@@ -1,0 +1,17 @@
+{
+  "total": 2,
+  "processed": 2,
+  "missing": 0,
+  "results": [
+    {
+      "file": "a.txt",
+      "status": "processed",
+      "size": 35
+    },
+    {
+      "file": "b.txt",
+      "status": "processed",
+      "size": 32
+    }
+  ]
+}
