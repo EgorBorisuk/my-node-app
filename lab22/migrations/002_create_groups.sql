@@ -1,0 +1,12 @@
+
+CREATE TABLE IF NOT EXISTS groups (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(20) NOT NULL UNIQUE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+INSERT IGNORE INTO groups (name)
+VALUES
+    ('ББМО-01-23'),
+    ('ББМО-02-23'),
+    ('ББМО-03-23');
